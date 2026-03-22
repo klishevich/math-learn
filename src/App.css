@@ -1,0 +1,23 @@
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.app-title {
+  text-align: center;
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 8px;
+  }
+
+  .app-title {
+    font-size: 22px;
+  }
+}

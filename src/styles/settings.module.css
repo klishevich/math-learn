@@ -1,0 +1,74 @@
+.settingsPanel {
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.settingsTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.settingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settingLabel {
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+}
+
+.settingInput {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.settingCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.settingCheckbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.generateButton {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: #1565c0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}
+
+.generateButton:hover {
+  background: #0d47a1;
+}
+
+.generateButton:active {
+  background: #0a3d91;
+}
