@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import styles from '../styles/toolbar.module.css';
 
 interface ToolbarProps {
@@ -19,47 +19,51 @@ export function Toolbar({ canSum, canFactorOut, canUndo, onSum, onFactorOut, onM
   return (
     <div className={styles.toolbar}>
       {canSum && (
-        <div className={styles.toolbarGroup}>
-          <button className={styles.toolbarButton} onClick={onSum}>
-            Sum
-          </button>
-        </div>
+        <Fragment>
+          <div className={styles.toolbarGroup}>
+            <button className={styles.toolbarButton} onClick={onSum}>
+              Сложить
+            </button>
+          </div>
+          <div className={styles.separator} />
+        </Fragment>
       )}
 
       {canFactorOut && (
-        <div className={styles.toolbarGroup}>
-          <input
-            className={styles.toolbarInput}
-            type="text"
-            placeholder="factor"
-            value={factorInput}
-            onChange={e => setFactorInput(e.target.value)}
-          />
-          <label style={{ fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <Fragment>
+          <div className={styles.toolbarGroup}>
             <input
-              type="checkbox"
-              checked={factorIncludeVar}
-              onChange={e => setFactorIncludeVar(e.target.checked)}
+              className={styles.toolbarInput}
+              type="text"
+              placeholder="Множ."
+              value={factorInput}
+              onChange={e => setFactorInput(e.target.value)}
             />
-            incl. var
-          </label>
-          <button
-            className={styles.toolbarButton}
-            onClick={() => { onFactorOut(factorInput, factorIncludeVar); setFactorInput(''); }}
-            disabled={!factorInput}
-          >
-            Factor out
-          </button>
-        </div>
+            <label style={{ fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <input
+                type="checkbox"
+                checked={factorIncludeVar}
+                onChange={e => setFactorIncludeVar(e.target.checked)}
+              />
+              перем.
+            </label>
+            <button
+              className={styles.toolbarButton}
+              onClick={() => { onFactorOut(factorInput, factorIncludeVar); setFactorInput(''); }}
+              disabled={!factorInput}
+            >
+              Вынести
+            </button>
+          </div>
+          <div className={styles.separator} />
+        </Fragment>
       )}
-
-      <div className={styles.separator} />
 
       <div className={styles.toolbarGroup}>
         <input
           className={styles.toolbarInput}
           type="text"
-          placeholder="value"
+          placeholder="значение"
           value={multiplyInput}
           onChange={e => setMultiplyInput(e.target.value)}
         />
@@ -68,7 +72,7 @@ export function Toolbar({ canSum, canFactorOut, canUndo, onSum, onFactorOut, onM
           onClick={() => { onMultiplyEquation(multiplyInput); setMultiplyInput(''); }}
           disabled={!multiplyInput}
         >
-          Multiply equation
+          Умножить уравн.
         </button>
       </div>
 
@@ -79,7 +83,7 @@ export function Toolbar({ canSum, canFactorOut, canUndo, onSum, onFactorOut, onM
         onClick={onUndo}
         disabled={!canUndo}
       >
-        Undo
+        Отменить
       </button>
     </div>
   );

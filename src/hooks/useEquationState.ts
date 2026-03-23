@@ -34,7 +34,7 @@ export function useEquationState() {
   }, [settings]);
 
   const handleExpandBracket = useCallback((bracketTermId: string) => {
-    if (confirm('Expand bracket?')) {
+    if (confirm('Раскрыть скобки?')) {
       applyOperation(eq => expandBracket(eq, bracketTermId));
     }
   }, [applyOperation]);

@@ -14,10 +14,10 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
 
   return (
     <div className={styles.settingsPanel}>
-      <div className={styles.settingsTitle}>Equation Settings</div>
+      <div className={styles.settingsTitle}>Параметры уравнения</div>
       <div className={styles.settingsGrid}>
         <div className={styles.settingItem}>
-          <label className={styles.settingLabel}>Numeric terms</label>
+          <label className={styles.settingLabel}>Кол-во свободных членов (числа)</label>
           <input
             className={styles.settingInput}
             type="number"
@@ -27,7 +27,7 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
           />
         </div>
         <div className={styles.settingItem}>
-          <label className={styles.settingLabel}>Variable terms</label>
+          <label className={styles.settingLabel}>Кол-во членов с переменной (иксы)</label>
           <input
             className={styles.settingInput}
             type="number"
@@ -37,16 +37,16 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
           />
         </div>
         <div className={styles.settingItem}>
-          <label className={styles.settingLabel}>Variable symbol</label>
+          <label className={styles.settingLabel}>Символ для переменной</label>
           <input
             className={styles.settingInput}
             type="text"
             value={settings.variableSymbol}
-            onChange={e => update({ variableSymbol: e.target.value || 'x' })}
+            onChange={e => update({ variableSymbol: e.target.value || '' })}
           />
         </div>
         <div className={styles.settingItem}>
-          <label className={styles.settingLabel}>Brackets</label>
+          <label className={styles.settingLabel}>Кол-во скобок</label>
           <input
             className={styles.settingInput}
             type="number"
@@ -56,7 +56,7 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
           />
         </div>
         <div className={styles.settingItem}>
-          <label className={styles.settingLabel}>Denominator limit</label>
+          <label className={styles.settingLabel}>Макс. значение знаменателя</label>
           <input
             className={styles.settingInput}
             type="number"
@@ -66,7 +66,7 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
           />
         </div>
         <div className={styles.settingItem}>
-          <label className={styles.settingLabel}>Decimal precision</label>
+          <label className={styles.settingLabel}>Кол-во десятичных знаков</label>
           <input
             className={styles.settingInput}
             type="number"
@@ -81,7 +81,7 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
             checked={settings.useCommonFractions}
             onChange={e => update({ useCommonFractions: e.target.checked })}
           />
-          Common fractions
+          Обыкновенные дроби (3/4)
         </label>
         <label className={styles.settingCheckbox}>
           <input
@@ -89,7 +89,7 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
             checked={settings.useImproperFractions}
             onChange={e => update({ useImproperFractions: e.target.checked })}
           />
-          Improper fractions
+          Неправильные дроби (7/4)
         </label>
         <label className={styles.settingCheckbox}>
           <input
@@ -97,7 +97,7 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
             checked={settings.useMixedNumbers}
             onChange={e => update({ useMixedNumbers: e.target.checked })}
           />
-          Mixed numbers
+          Смешанные дроби (1 1/4)
         </label>
         <label className={styles.settingCheckbox}>
           <input
@@ -105,12 +105,16 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
             checked={settings.useDecimalFractions}
             onChange={e => update({ useDecimalFractions: e.target.checked })}
           />
-          Decimal fractions
+          Десятичные дроби
         </label>
       </div>
       <button className={styles.generateButton} onClick={onGenerate}>
-        Generate Equation
+        Создать уравнение
       </button>
+      <div>
+        <br/>
+        После создания уравнения, можно менять порядок членов, переносить из за знак равно, группировать, раскрывать скобки и выносить общий множитель за скобки. 
+      </div>
     </div>
   );
 }

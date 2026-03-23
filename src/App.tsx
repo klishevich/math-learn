@@ -58,7 +58,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1 className="app-title">Math Learn</h1>
+      <h1 className="app-title">Даша любит математику</h1>
       <SettingsPanel settings={settings} onChange={setSettings} onGenerate={generateNew} />
       <DndContext
         sensors={sensors}
