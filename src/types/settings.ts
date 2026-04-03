@@ -19,7 +19,7 @@ export const DEFAULT_SETTINGS: EquationSettings = {
   useCommonFractions: true,
   fractionDenominatorLimit: 10,
   useImproperFractions: false,
-  useMixedNumbers: true,
+  useMixedNumbers: false,
   useDecimalFractions: true,
   decimalPrecision: 1,
 };

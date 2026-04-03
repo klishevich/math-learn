@@ -12,7 +12,19 @@ function computeExpandedSign(bracketSign: Sign, innerSign: Sign, multiplierNegat
   return negCount % 2 === 0 ? '+' : '-';
 }
 
-function chooseDisplayFormat(value: Fraction): DisplayFormat {
+function getDisplayPrecision(fmt: DisplayFormat): number | null {
+  if (fmt.kind === 'integer') return 0;
+  if (fmt.kind === 'decimal') return fmt.precision;
+  return null; // fraction-based formats
+}
+
+function chooseDisplayFormat(value: Fraction, multiplierFmt: DisplayFormat, innerFmt: DisplayFormat): DisplayFormat {
+  const mp = getDisplayPrecision(multiplierFmt);
+  const ip = getDisplayPrecision(innerFmt);
+  // If both are decimal/integer and at least one is decimal, result is decimal
+  if (mp !== null && ip !== null && (mp > 0 || ip > 0)) {
+    return { kind: 'decimal', precision: mp + ip };
+  }
   const r = frac.reduce(value);
   if (r.denominator === 1) return { kind: 'integer' };
   return { kind: 'commonFraction' };
@@ -21,6 +33,7 @@ function chooseDisplayFormat(value: Fraction): DisplayFormat {
 function expandInnerTerm(
   innerTerm: FlatTerm,
   multiplier: Fraction,
+  multiplierDisplayFormat: DisplayFormat,
   bracketSign: Sign,
   multiplierIsVariable: boolean,
   multiplierSymbol: string | undefined,
@@ -31,18 +44,20 @@ function expandInnerTerm(
   const resultSign = computeExpandedSign(bracketSign, innerTerm.sign, isMultiplierNeg);
 
   if (innerTerm.kind === 'numeric') {
+    const innerFmt = innerTerm.displayFormat;
     if (multiplierIsVariable && multiplierSymbol) {
       // numeric * variable_multiplier = variable term
       const coeff = frac.multiply(innerTerm.value, multiplierAbs);
-      return createVariableTerm(coeff, chooseDisplayFormat(coeff), multiplierSymbol, resultSign, side);
+      return createVariableTerm(coeff, chooseDisplayFormat(coeff, multiplierDisplayFormat, innerFmt), multiplierSymbol, resultSign, side);
     }
     // numeric * numeric_multiplier = numeric
     const value = frac.multiply(innerTerm.value, multiplierAbs);
-    return createNumericTerm(value, chooseDisplayFormat(value), resultSign, side);
+    return createNumericTerm(value, chooseDisplayFormat(value, multiplierDisplayFormat, innerFmt), resultSign, side);
   } else {
     // variable * numeric_multiplier = variable (multiplierIsVariable should be false here for linearity)
+    const innerFmt = innerTerm.coefficientDisplayFormat;
     const coeff = frac.multiply(innerTerm.coefficient, multiplierAbs);
-    return createVariableTerm(coeff, chooseDisplayFormat(coeff), innerTerm.symbol, resultSign, side);
+    return createVariableTerm(coeff, chooseDisplayFormat(coeff, multiplierDisplayFormat, innerFmt), innerTerm.symbol, resultSign, side);
   }
 }
 
@@ -56,6 +71,7 @@ export function expandBracket(equation: Equation, bracketTermId: string): Equati
           expandInnerTerm(
             inner,
             bracket.multiplier,
+            bracket.multiplierDisplayFormat,
             bracket.sign,
             bracket.multiplierIsVariable,
             bracket.multiplierSymbol,
