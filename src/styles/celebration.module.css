@@ -1,0 +1,46 @@
+.celebration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 24px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.emoji {
+  font-size: 96px;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.time {
+  font-size: 18px;
+  color: #666;
+  animation: fadeIn 1.2s ease-out;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

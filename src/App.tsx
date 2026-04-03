@@ -1,21 +1,23 @@
-import { DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, DragOverlay, PointerSensor, TouchSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core';
 import { useEquationState } from './hooks/useEquationState.ts';
 import { useSelection } from './hooks/useSelection.ts';
 import { useDragAndDrop } from './hooks/useDragAndDrop.ts';
 import { EquationView } from './components/EquationView.tsx';
+import { TermView } from './components/TermView.tsx';
 import { SettingsPanel } from './components/SettingsPanel.tsx';
 import { Toolbar } from './components/Toolbar.tsx';
+import { CelebrationView } from './components/CelebrationView.tsx';
 import { canGroupTerms } from './engine/validation.ts';
 import { parseFraction } from './engine/fraction.ts';
 import './App.css';
 
 function App() {
   const {
-    equation, settings, selectedTermIds,
+    equation, settings, selectedTermIds, solveTime,
     setSettings, setSelectedTermIds,
     generateNew, handleExpandBracket, handleGroupTerms,
-    handleFactorOut, handleMultiplyEquation, handleReorderTerm,
-    undo, canUndo,
+    handleFactorOut, handleMultiplyEquation, handleDivideEquation,
+    handleReorderTerm, undo, canUndo,
   } = useEquationState();
 
   const { toggleSelection } = useSelection(equation, selectedTermIds, setSelectedTermIds);
@@ -54,7 +56,19 @@ function App() {
     handleMultiplyEquation(factor);
   };
 
+  const onDivideEquation = (valueInput: string) => {
+    const factor = parseFraction(valueInput);
+    if (!factor) {
+      alert('Invalid value. Enter an integer or fraction (e.g., 2, 3/4, -1/2)');
+      return;
+    }
+    handleDivideEquation(factor);
+  };
+
   const selectedSet = new Set(selectedTermIds);
+
+  const allTerms = [...equation.left.terms, ...equation.right.terms];
+  const draggedTerm = draggedTermId ? allTerms.find(t => t.id === draggedTermId) ?? null : null;
 
   return (
     <div className="app">
@@ -62,6 +76,7 @@ function App() {
       <SettingsPanel settings={settings} onChange={setSettings} onGenerate={generateNew} />
       <DndContext
         sensors={sensors}
+        collisionDetection={closestCenter}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
@@ -73,7 +88,20 @@ function App() {
           onSelect={toggleSelection}
           onBracketExpand={handleExpandBracket}
         />
+        <DragOverlay dropAnimation={null}>
+          {draggedTerm && (
+            <TermView
+              term={draggedTerm}
+              isSelected={false}
+              isFirst={true}
+              isDragging={true}
+              onSelect={() => {}}
+              onBracketExpand={() => {}}
+            />
+          )}
+        </DragOverlay>
       </DndContext>
+      {solveTime !== null && <CelebrationView solveTime={solveTime} />}
       <Toolbar
         canSum={canSum}
         canFactorOut={canFactor}
@@ -81,6 +109,7 @@ function App() {
         onSum={handleGroupTerms}
         onFactorOut={onFactorOut}
         onMultiplyEquation={onMultiplyEquation}
+        onDivideEquation={onDivideEquation}
         onUndo={undo}
       />
     </div>

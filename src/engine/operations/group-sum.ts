@@ -4,7 +4,18 @@ import type { DisplayFormat } from '../../types/fraction.ts';
 import * as frac from '../fraction.ts';
 import { createNumericTerm, createVariableTerm, createZeroTerm, getEffectiveValue } from '../term.ts';
 
-function chooseDisplayFormat(value: import('../../types/fraction.ts').Fraction): DisplayFormat {
+function chooseDisplayFormat(value: import('../../types/fraction.ts').Fraction, terms: FlatTerm[]): DisplayFormat {
+  // If all terms are decimal, preserve decimal format with max precision
+  const decimalFormats = terms.map(t => {
+    const fmt = t.kind === 'variable' ? t.coefficientDisplayFormat : t.displayFormat;
+    return fmt.kind === 'decimal' ? fmt : null;
+  }).filter((f): f is { kind: 'decimal'; precision: number } => f !== null);
+
+  if (decimalFormats.length === terms.length && decimalFormats.length > 0) {
+    const maxPrecision = Math.max(...decimalFormats.map(f => f.precision));
+    return { kind: 'decimal', precision: maxPrecision };
+  }
+
   const r = frac.reduce(value);
   if (r.denominator === 1) return { kind: 'integer' };
   return { kind: 'commonFraction' };
@@ -40,12 +51,12 @@ export function groupTerms(equation: Equation, termIds: string[]): Equation {
     if (firstKind === 'variable') {
       const vt = selectedTerms[0];
       if (vt.kind === 'variable') {
-        replacement = createVariableTerm(absValue, chooseDisplayFormat(absValue), vt.symbol, sign, side);
+        replacement = createVariableTerm(absValue, chooseDisplayFormat(absValue, selectedTerms), vt.symbol, sign, side);
       } else {
-        replacement = createNumericTerm(absValue, chooseDisplayFormat(absValue), sign, side);
+        replacement = createNumericTerm(absValue, chooseDisplayFormat(absValue, selectedTerms), sign, side);
       }
     } else {
-      replacement = createNumericTerm(absValue, chooseDisplayFormat(absValue), sign, side);
+      replacement = createNumericTerm(absValue, chooseDisplayFormat(absValue, selectedTerms), sign, side);
     }
 
     // Build result: everything before first selected, replacement, everything after last selected

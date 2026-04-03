@@ -8,10 +8,11 @@ interface ToolbarProps {
   onSum: () => void;
   onFactorOut: (factorInput: string, includeVariable: boolean) => void;
   onMultiplyEquation: (valueInput: string) => void;
+  onDivideEquation: (valueInput: string) => void;
   onUndo: () => void;
 }
 
-export function Toolbar({ canSum, canFactorOut, canUndo, onSum, onFactorOut, onMultiplyEquation, onUndo }: ToolbarProps) {
+export function Toolbar({ canSum, canFactorOut, canUndo, onSum, onFactorOut, onMultiplyEquation, onDivideEquation, onUndo }: ToolbarProps) {
   const [factorInput, setFactorInput] = useState('');
   const [factorIncludeVar, setFactorIncludeVar] = useState(false);
   const [multiplyInput, setMultiplyInput] = useState('');
@@ -72,7 +73,14 @@ export function Toolbar({ canSum, canFactorOut, canUndo, onSum, onFactorOut, onM
           onClick={() => { onMultiplyEquation(multiplyInput); setMultiplyInput(''); }}
           disabled={!multiplyInput}
         >
-          Умножить уравн.
+          &#10006; уравнение
+        </button>
+        <button
+          className={styles.toolbarButton}
+          onClick={() => { onDivideEquation(multiplyInput); setMultiplyInput(''); }}
+          disabled={!multiplyInput}
+        >
+          &#10135;
         </button>
       </div>
 

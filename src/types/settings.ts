@@ -14,12 +14,12 @@ export interface EquationSettings {
 export const DEFAULT_SETTINGS: EquationSettings = {
   numericTermCount: 2,
   variableTermCount: 2,
-  variableSymbol: 'x',
+  variableSymbol: '🍎',
   bracketCount: 1,
   useCommonFractions: true,
   fractionDenominatorLimit: 10,
   useImproperFractions: false,
   useMixedNumbers: true,
   useDecimalFractions: true,
-  decimalPrecision: 3,
+  decimalPrecision: 1,
 };

@@ -1,5 +1,4 @@
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Term } from '../types/term.ts';
 import { SortableTermView } from './SortableTermView.tsx';
 import styles from '../styles/equation.module.css';
@@ -25,8 +24,10 @@ export function EquationSideView({
 
   return (
     <div ref={setNodeRef} className={classNames}>
-      <SortableContext items={terms.map(t => t.id)} strategy={horizontalListSortingStrategy}>
-        {terms.map((term, index) => (
+      {terms.length === 0 ? (
+        <span className={styles.zeroPlaceholder}>0</span>
+      ) : (
+        terms.map((term, index) => (
           <SortableTermView
             key={term.id}
             term={term}
@@ -36,8 +37,8 @@ export function EquationSideView({
             onSelect={onSelect}
             onBracketExpand={onBracketExpand}
           />
-        ))}
-      </SortableContext>
+        ))
+      )}
     </div>
   );
 }

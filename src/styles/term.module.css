@@ -19,7 +19,10 @@
 }
 
 .dragging {
-  opacity: 0.5;
+  background-color: #e3f2fd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.08);
+  z-index: 10;
 }
 
 .numeric {
@@ -28,10 +31,14 @@
 
 .variable {
   color: #1565c0;
+  display: inline-flex;
+  align-items: center;
 }
 
 .bracket {
   color: #c62828;
+  display: inline-flex;
+  align-items: center;
 }
 
 .sign {

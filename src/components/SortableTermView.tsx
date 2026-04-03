@@ -1,5 +1,4 @@
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import type { Term } from '../types/term.ts';
 import { TermView } from './TermView.tsx';
 
@@ -13,26 +12,21 @@ interface SortableTermViewProps {
 }
 
 export function SortableTermView({ term, isSelected, isFirst, isDragging, onSelect, onBracketExpand }: SortableTermViewProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: term.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  const { attributes, listeners, setNodeRef: setDragRef } = useDraggable({ id: term.id });
+  const { setNodeRef: setDropRef } = useDroppable({ id: term.id });
 
   return (
-    <span ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <span
+      ref={(node) => { setDragRef(node); setDropRef(node); }}
+      {...attributes}
+      {...listeners}
+      style={{ opacity: isDragging ? 0.4 : 1 }}
+    >
       <TermView
         term={term}
         isSelected={isSelected}
         isFirst={isFirst}
-        isDragging={isDragging}
+        isDragging={false}
         onSelect={onSelect}
         onBracketExpand={onBracketExpand}
       />

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type { Equation } from '../types/equation.ts';
 import type { EquationSettings } from '../types/settings.ts';
 import { DEFAULT_SETTINGS } from '../types/settings.ts';
@@ -6,21 +6,46 @@ import { generateEquation } from '../engine/equation-generator.ts';
 import { expandBracket } from '../engine/operations/expand-bracket.ts';
 import { groupTerms } from '../engine/operations/group-sum.ts';
 import { factorOut } from '../engine/operations/factor-out.ts';
-import { multiplyEquation } from '../engine/operations/multiply-divide.ts';
+import { divideEquation, multiplyEquation } from '../engine/operations/multiply-divide.ts';
 import { reorderTerm } from '../engine/operations/reorder.ts';
 import type { Fraction } from '../types/fraction.ts';
 import type { Side } from '../types/term.ts';
+
+function isEquationSolved(eq: Equation): boolean {
+  const { left, right } = eq;
+  const l = left.terms;
+  const r = right.terms;
+
+  // variable = number or number = variable
+  const isVarAlone = (terms: Equation['left']['terms']) =>
+    terms.length === 1 &&
+    terms[0].kind === 'variable' &&
+    terms[0].sign === '+' &&
+    terms[0].coefficient.numerator === 1 &&
+    terms[0].coefficient.denominator === 1;
+
+  const isNumeric = (terms: Equation['left']['terms']) =>
+    terms.length === 1 && terms[0].kind === 'numeric';
+
+  return (isVarAlone(l) && isNumeric(r)) || (isNumeric(l) && isVarAlone(r));
+}
 
 export function useEquationState() {
   const [settings, setSettings] = useState<EquationSettings>(DEFAULT_SETTINGS);
   const [equation, setEquation] = useState<Equation>(() => generateEquation(DEFAULT_SETTINGS));
   const [history, setHistory] = useState<Equation[]>([]);
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
+  const [solveTime, setSolveTime] = useState<number | null>(null);
+  const startTimeRef = useRef<number>(Date.now());
 
   const applyOperation = useCallback((op: (eq: Equation) => Equation) => {
     setEquation(prev => {
       setHistory(h => [...h, prev]);
-      return op(prev);
+      const next = op(prev);
+      if (isEquationSolved(next)) {
+        setSolveTime(Math.round((Date.now() - startTimeRef.current) / 1000));
+      }
+      return next;
     });
     setSelectedTermIds([]);
   }, []);
@@ -31,6 +56,8 @@ export function useEquationState() {
       return generateEquation(settings);
     });
     setSelectedTermIds([]);
+    setSolveTime(null);
+    startTimeRef.current = Date.now();
   }, [settings]);
 
   const handleExpandBracket = useCallback((bracketTermId: string) => {
@@ -49,6 +76,10 @@ export function useEquationState() {
 
   const handleMultiplyEquation = useCallback((factor: Fraction) => {
     applyOperation(eq => multiplyEquation(eq, factor));
+  }, [applyOperation]);
+
+  const handleDivideEquation = useCallback((factor: Fraction) => {
+    applyOperation(eq => divideEquation(eq, factor));
   }, [applyOperation]);
 
   const handleReorderTerm = useCallback((termId: string, targetSide: Side, targetIndex: number) => {
@@ -70,6 +101,7 @@ export function useEquationState() {
     equation,
     settings,
     selectedTermIds,
+    solveTime,
     setSettings,
     setSelectedTermIds,
     generateNew,
@@ -77,6 +109,7 @@ export function useEquationState() {
     handleGroupTerms,
     handleFactorOut,
     handleMultiplyEquation,
+    handleDivideEquation,
     handleReorderTerm,
     undo,
     canUndo: history.length > 0,

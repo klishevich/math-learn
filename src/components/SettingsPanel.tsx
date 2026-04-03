@@ -105,7 +105,7 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
             checked={settings.useDecimalFractions}
             onChange={e => update({ useDecimalFractions: e.target.checked })}
           />
-          Десятичные дроби
+          Десятичные дроби (0,1)
         </label>
       </div>
       <button className={styles.generateButton} onClick={onGenerate}>
