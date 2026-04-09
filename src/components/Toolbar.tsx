@@ -4,15 +4,17 @@ import styles from '../styles/toolbar.module.css';
 interface ToolbarProps {
   canSum: boolean;
   canFactorOut: boolean;
+  canConvertFraction: boolean;
   canUndo: boolean;
   onSum: () => void;
   onFactorOut: (factorInput: string, includeVariable: boolean) => void;
+  onConvertFraction: () => void;
   onMultiplyEquation: (valueInput: string) => void;
   onDivideEquation: (valueInput: string) => void;
   onUndo: () => void;
 }
 
-export function Toolbar({ canSum, canFactorOut, canUndo, onSum, onFactorOut, onMultiplyEquation, onDivideEquation, onUndo }: ToolbarProps) {
+export function Toolbar({ canSum, canFactorOut, canConvertFraction, canUndo, onSum, onFactorOut, onConvertFraction, onMultiplyEquation, onDivideEquation, onUndo }: ToolbarProps) {
   const [factorInput, setFactorInput] = useState('');
   const [factorIncludeVar, setFactorIncludeVar] = useState(false);
   const [multiplyInput, setMultiplyInput] = useState('');
@@ -54,6 +56,17 @@ export function Toolbar({ canSum, canFactorOut, canUndo, onSum, onFactorOut, onM
               disabled={!factorInput}
             >
               Вынести
+            </button>
+          </div>
+          <div className={styles.separator} />
+        </Fragment>
+      )}
+
+      {canConvertFraction && (
+        <Fragment>
+          <div className={styles.toolbarGroup}>
+            <button className={styles.toolbarButton} onClick={onConvertFraction}>
+              Дробь
             </button>
           </div>
           <div className={styles.separator} />

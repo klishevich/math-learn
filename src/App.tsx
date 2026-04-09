@@ -18,7 +18,7 @@ function App() {
     setSettings, setSelectedTermIds,
     generateNew, handleExpandBracket, handleGroupTerms,
     handleFactorOut, handleMultiplyEquation, handleDivideEquation,
-    handleReorderTerm, undo, canUndo,
+    handleReorderTerm, handleConvertFraction, undo, canUndo,
   } = useEquationState();
 
   const { toggleSelection } = useSelection(equation, selectedTermIds, setSelectedTermIds);
@@ -73,7 +73,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1 className="app-title">Даша любит математику</h1>
+      <h1 className="app-title">Dasha ❤️ maths v1.0.0</h1>
       <SettingsPanel settings={settings} onChange={setSettings} onGenerate={generateNew} />
       <DndContext
         sensors={sensors}
@@ -106,9 +106,11 @@ function App() {
       <Toolbar
         canSum={canSum}
         canFactorOut={canFactor}
+        canConvertFraction={selectedTermIds.length >= 1}
         canUndo={canUndo}
         onSum={handleGroupTerms}
         onFactorOut={onFactorOut}
+        onConvertFraction={handleConvertFraction}
         onMultiplyEquation={onMultiplyEquation}
         onDivideEquation={onDivideEquation}
         onUndo={undo}

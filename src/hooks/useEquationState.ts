@@ -8,6 +8,7 @@ import { groupTerms } from '../engine/operations/group-sum.ts';
 import { factorOut } from '../engine/operations/factor-out.ts';
 import { divideEquation, multiplyEquation } from '../engine/operations/multiply-divide.ts';
 import { reorderTerm } from '../engine/operations/reorder.ts';
+import { convertFraction } from '../engine/operations/convert-fraction.ts';
 import type { Fraction } from '../types/fraction.ts';
 import type { Side } from '../types/term.ts';
 
@@ -86,6 +87,19 @@ export function useEquationState() {
     applyOperation(eq => reorderTerm(eq, termId, targetSide, targetIndex));
   }, [applyOperation]);
 
+  const handleConvertFraction = useCallback(() => {
+    const result = convertFraction(equation, selectedTermIds);
+    if (typeof result === 'string') {
+      alert(result);
+      return;
+    }
+    setEquation(prev => {
+      setHistory(h => [...h, prev]);
+      return result;
+    });
+    setSelectedTermIds([]);
+  }, [equation, selectedTermIds]);
+
   const undo = useCallback(() => {
     setHistory(prev => {
       if (prev.length === 0) return prev;
@@ -111,6 +125,7 @@ export function useEquationState() {
     handleMultiplyEquation,
     handleDivideEquation,
     handleReorderTerm,
+    handleConvertFraction,
     undo,
     canUndo: history.length > 0,
   };
