@@ -6,6 +6,7 @@ import { EquationView } from './components/EquationView.tsx';
 import { TermView } from './components/TermView.tsx';
 import { SettingsPanel } from './components/SettingsPanel.tsx';
 import { Toolbar } from './components/Toolbar.tsx';
+import { DrawingCanvas } from './components/DrawingCanvas.tsx';
 import { CelebrationView } from './components/CelebrationView.tsx';
 import { canGroupTerms } from './engine/validation.ts';
 import { parseFraction } from './engine/fraction.ts';
@@ -112,6 +113,7 @@ function App() {
         onDivideEquation={onDivideEquation}
         onUndo={undo}
       />
+      <DrawingCanvas />
     </div>
   );
 }
