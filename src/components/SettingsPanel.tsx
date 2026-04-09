@@ -20,20 +20,18 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
           <label className={styles.settingLabel}>Кол-во свободных членов (числа)</label>
           <input
             className={styles.settingInput}
-            type="number"
-            min={1} max={10}
+            type="text"
             value={settings.numericTermCount}
-            onChange={e => update({ numericTermCount: Math.max(1, Math.min(10, +e.target.value)) })}
+            onChange={e => update({ numericTermCount: isNaN(+e.target.value) ? 1 : +e.target.value })}
           />
         </div>
         <div className={styles.settingItem}>
           <label className={styles.settingLabel}>Кол-во членов с переменной (иксы)</label>
           <input
             className={styles.settingInput}
-            type="number"
-            min={1} max={10}
+            type="text"
             value={settings.variableTermCount}
-            onChange={e => update({ variableTermCount: Math.max(1, Math.min(10, +e.target.value)) })}
+            onChange={e => update({ variableTermCount: isNaN(+e.target.value) ? 1 : +e.target.value })}
           />
         </div>
         <div className={styles.settingItem}>
@@ -49,30 +47,27 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
           <label className={styles.settingLabel}>Кол-во скобок</label>
           <input
             className={styles.settingInput}
-            type="number"
-            min={0} max={10}
+            type="text"
             value={settings.bracketCount}
-            onChange={e => update({ bracketCount: Math.max(0, Math.min(10, +e.target.value)) })}
+            onChange={e => update({ bracketCount: isNaN(+e.target.value) ? 1 : +e.target.value })}
           />
         </div>
         <div className={styles.settingItem}>
           <label className={styles.settingLabel}>Макс. значение знаменателя</label>
           <input
             className={styles.settingInput}
-            type="number"
-            min={2} max={100}
+            type="text"
             value={settings.fractionDenominatorLimit}
-            onChange={e => update({ fractionDenominatorLimit: Math.max(2, Math.min(100, +e.target.value)) })}
+            onChange={e => update({ fractionDenominatorLimit: isNaN(+e.target.value) ? 2 : +e.target.value })}
           />
         </div>
         <div className={styles.settingItem}>
           <label className={styles.settingLabel}>Кол-во десятичных знаков</label>
           <input
             className={styles.settingInput}
-            type="number"
-            min={0} max={10}
+            type="text"
             value={settings.decimalPrecision}
-            onChange={e => update({ decimalPrecision: Math.max(0, Math.min(10, +e.target.value)) })}
+            onChange={e => update({ decimalPrecision: isNaN(+e.target.value) ? 0 : +e.target.value  })}
           />
         </div>
         <label className={styles.settingCheckbox}>
