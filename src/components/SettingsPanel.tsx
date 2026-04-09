@@ -1,4 +1,5 @@
 import type { EquationSettings } from '../types/settings.ts';
+import { randomEmoji } from '../types/settings.ts';
 import styles from '../styles/settings.module.css';
 
 interface SettingsPanelProps {
@@ -10,6 +11,10 @@ interface SettingsPanelProps {
 export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelProps) {
   const update = (partial: Partial<EquationSettings>) => {
     onChange({ ...settings, ...partial });
+  };
+
+  const insertRandomEmoji = () => {
+    update({ variableSymbol: randomEmoji() });
   };
 
   return (
@@ -36,12 +41,15 @@ export function SettingsPanel({ settings, onChange, onGenerate }: SettingsPanelP
         </div>
         <div className={styles.settingItem}>
           <label className={styles.settingLabel}>Символ для переменной</label>
-          <input
-            className={styles.settingInput}
-            type="text"
-            value={settings.variableSymbol}
-            onChange={e => update({ variableSymbol: e.target.value || '' })}
-          />
+          <div className={styles.settingInputRow}>
+            <input
+              className={styles.settingInput}
+              type="text"
+              value={settings.variableSymbol}
+              onChange={e => update({ variableSymbol: e.target.value || '' })}
+            />
+            <button className={styles.emojiButton} onClick={insertRandomEmoji} type="button" title="Случайный эмодзи">🎲</button>
+          </div>
         </div>
         <div className={styles.settingItem}>
           <label className={styles.settingLabel}>Кол-во скобок</label>
